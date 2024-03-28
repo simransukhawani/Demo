@@ -14,7 +14,9 @@ pipeline {
                 // Install Python dependencies from requirements.txt
                 script {
                     try {
-                        sh 'pip install -r requirements.txt'
+                        // Use pipenv for dependency management
+                        sh 'pip install pipenv'
+                        sh 'pipenv install'
                     } catch (Exception e) {
                         echo "Failed to install dependencies: ${e.message}"
                         error "Failed to install dependencies"
@@ -28,7 +30,8 @@ pipeline {
                 // Run Bandit for security checks
                 script {
                     try {
-                        sh 'bandit -r .'
+                        // Use pipenv shell to run Bandit
+                        sh 'pipenv shell bandit -r .'
                     } catch (Exception e) {
                         echo "Failed to run Bandit: ${e.message}"
                         error "Failed to run Bandit"
@@ -42,7 +45,8 @@ pipeline {
                 // Run Python unit tests
                 script {
                     try {
-                        sh 'python -m unittest discover'
+                        // Use pipenv shell to run tests
+                        sh 'pipenv shell python -m unittest discover'
                     } catch (Exception e) {
                         echo "Failed to run tests: ${e.message}"
                         error "Failed to run tests"
