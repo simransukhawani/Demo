@@ -11,12 +11,11 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                // Install Python dependencies from requirements.txt
+                // Install Python dependencies from requirements.txt using pipenv
                 script {
                     try {
-                        // Use pipenv for dependency management
                         sh 'pip install pipenv'
-                        sh 'pipenv install'
+                        sh 'pipenv install --deploy --system'
                     } catch (Exception e) {
                         echo "Failed to install dependencies: ${e.message}"
                         error "Failed to install dependencies"
@@ -27,11 +26,10 @@ pipeline {
         
         stage('Run Bandit') {
             steps {
-                // Run Bandit for security checks
+                // Run Bandit for security checks using pipenv
                 script {
                     try {
-                        // Use pipenv shell to run Bandit
-                        sh 'pipenv shell bandit -r .'
+                        sh 'pipenv run bandit -r .'
                     } catch (Exception e) {
                         echo "Failed to run Bandit: ${e.message}"
                         error "Failed to run Bandit"
@@ -42,11 +40,10 @@ pipeline {
         
         stage('Run Tests') {
             steps {
-                // Run Python unit tests
+                // Run Python unit tests using pipenv
                 script {
                     try {
-                        // Use pipenv shell to run tests
-                        sh 'pipenv shell python -m unittest discover'
+                        sh 'pipenv run python -m unittest discover'
                     } catch (Exception e) {
                         echo "Failed to run tests: ${e.message}"
                         error "Failed to run tests"
